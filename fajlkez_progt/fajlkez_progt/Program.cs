@@ -1,10 +1,4 @@
-﻿/* 
- * Az órán nem tanult változók:
-     * - bool: egyik feladatban a nullát ellenőriztem, hogy nem-e 'NULL' értékű, és ugye azt nem lehet int-tel
-     * - var: könnyebben tudtam meghatározni a fájlok írását és beolvasását | forrás: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/declarations
-*/
-
-#region 1.Feladat|szamok
+﻿#region 1.Feladat|szamok
 Console.ForegroundColor = ConsoleColor.Red;
 Console.WriteLine("1. Feladat|szamok");
 Console.ResetColor();
@@ -161,7 +155,14 @@ Console.WriteLine("i. Feladat|Nulla ellenőrzés");
 Console.ResetColor();
 
 bool vanNulla = szamok.Contains(0);
-Console.WriteLine(vanNulla ? "Van 0 a számok között." : "Nincs 0 a számok között.");
+if (vanNulla)
+{
+    Console.WriteLine("Van 0 a számok között.");
+}
+else
+{
+    Console.WriteLine("Nincs 0 a számok között.");
+}
 
 // ---sortores---
 Thread.Sleep(500);
@@ -174,7 +175,14 @@ Console.WriteLine("j. Feladat|Első negatív szám pozíciója");
 Console.ResetColor();
 
 int elsoNegativIndex = Array.FindIndex(szamok, x => x < 0);
-Console.WriteLine(elsoNegativIndex >= 0 ? $"Első negatív szám pozíciója: {elsoNegativIndex + 1}" : "Nincs negatív szám."); // if, else helyett szerintem ez sokkal egyszerűbb megoldás
+if (elsoNegativIndex >= 0)
+{
+    Console.WriteLine($"Első negatív szám pozíciója: {elsoNegativIndex + 1}");
+}
+else
+{
+    Console.WriteLine("Nincs negatív szám.");
+}
 
 // ---sortores---
 Thread.Sleep(500);
@@ -233,8 +241,8 @@ Console.ForegroundColor = ConsoleColor.Green;
 Console.WriteLine("a. Feladat|Két keresztnevűek száma");
 Console.ResetColor();
 
-int ketKeresztnev = sorokN.Count(n => n.Split(";").Length == 2);
-Console.WriteLine($"Két keresztnevűek száma: {ketKeresztnev}");
+int ketKeresztnev = sorokN.Count(n => n.Split(' ').Length == 3);
+Console.WriteLine($"Két keresztnévvel rendelkezők száma: {ketKeresztnev}");
 
 // ---sortores---
 Thread.Sleep(500);
@@ -286,66 +294,65 @@ Thread.Sleep(500);
 Console.WriteLine("");
 // ---sortores---
 
-// e. Nevek rendezett formában fájlba írása
+// e. Keresztneved keresése (Csongor)
 Console.ForegroundColor = ConsoleColor.Green;
-Console.WriteLine("e. Feladat|Nevek rendezett formában fájlba írása");
+Console.WriteLine("c. Feladat|Keresztneved keresése");
 Console.ResetColor();
 
-File.WriteAllLines("rendezett.txt", sorokN.OrderBy(n => n));
-Console.WriteLine("Rendezett nevek írása kész: rendezett.txt");
-
-// ---sortores---
-Thread.Sleep(500);
-Console.WriteLine("");
-// ---sortores---
-
-// f. Keresztnevek egyedi listája
-Console.ForegroundColor = ConsoleColor.Green;
-Console.WriteLine("f. Feladat|Keresztnevek egyedi listája");
-Console.ResetColor();
-
-var keresztnevek = new HashSet<string>();
-foreach (var nev in sorokN)
-{
-    foreach (var kernev in nev.Split(";"))
-    {
-        keresztnevek.Add(kernev);
-    }
-}
-Console.WriteLine(string.Join(", ", keresztnevek.OrderBy(n => n)));
-
-// ---sortores---
-Thread.Sleep(500);
-Console.WriteLine("");
-// ---sortores---
-
-// g. Monogram keresés
-Console.ForegroundColor = ConsoleColor.Green;
-Console.WriteLine("g. Feladat|Monogram keresés");
-Console.ResetColor();
-
-Console.Write("Adj meg egy monogramot (pl. 'vb'): ");
-string monogram = Console.ReadLine().ToUpper();
 bool talalatVan = false;
-
-foreach (var nev in sorokN)
+for (int i = 0; i < sorokN.Length; i++)
 {
-    string aktualisMonogram = "";
-    foreach (var resz in nev.Split())
+    string[] nevReszek = sorokN[i].Split(' ');
+    if (nevReszek.Contains("Csongor"))
     {
-        aktualisMonogram += resz[0];
-    }
-
-    if (aktualisMonogram.ToUpper() == monogram)
-    {
-        Console.WriteLine($"Találat: {nev}");
+        Console.WriteLine($"A keresztneved megtalálható a(z) {i + 1}. sorban: {sorokN[i]}");
         talalatVan = true;
+        break;
     }
 }
-
 if (!talalatVan)
 {
-    Console.WriteLine("Nincs ilyen monogramú személy.");
+    Console.WriteLine("A keresztneved nem található meg a fájlban."); // ezt így nem tudom le elenőrizni
 }
 
+// ---sortores---
+Thread.Sleep(500);
+Console.WriteLine("");
+// ---sortores---
+
+// f. Első és utolsó Szabó keresése
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine("d. Feladat|Első és utolsó Szabó keresése");
+Console.ResetColor();
+
+int elsoSzabo = -1;
+int utolsoSzabo = -1;
+
+for (int i = 0; i < sorokN.Length; i++)
+{
+    string[] nevReszek = sorokN[i].Split(' ');
+    if (nevReszek[0] == "Szabo")
+    {
+        if (elsoSzabo == -1)
+        {
+            elsoSzabo = i;
+        }
+        utolsoSzabo = i;
+    }
+}
+
+if (elsoSzabo != -1)
+{
+    Console.WriteLine($"Az első Szabó nevű személy a(z) {elsoSzabo + 1}. sorban található: {sorokN[elsoSzabo]}");
+    Console.WriteLine($"Az utolsó Szabó nevű személy a(z) {utolsoSzabo + 1}. sorban található: {sorokN[utolsoSzabo]}");
+}
+else
+{
+    Console.WriteLine("Nem található Szabó nevű személy a fájlban.");
+}
+
+// ---sortores---
+Thread.Sleep(500);
+Console.WriteLine("");
+// ---sortores---
 #endregion
